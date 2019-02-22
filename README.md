@@ -1,4 +1,4 @@
 # Java_043
-Java console application with maven
+Java Liferay Portlet Application
 
-mvn compile
+Fix pom.xml to deploy
