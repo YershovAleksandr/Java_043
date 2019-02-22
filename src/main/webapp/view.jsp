@@ -18,4 +18,4 @@
 
 <portlet:defineObjects />
 
-This is the <b>g Привет</b>.
+This is the <b>g Привет мир!!</b>.
