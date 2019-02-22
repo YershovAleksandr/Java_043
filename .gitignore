@@ -1,2 +1,8 @@
 /target/
 /home/
+*.class
+*.jar
+*.war
+.project
+.classpath
+.settings/
