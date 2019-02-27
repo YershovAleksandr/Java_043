@@ -1,8 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
-<%@ taglib uri="http://alloy.liferay.com/tld/aui" prefix="aui" %>
-
-<portlet:defineObjects/>
+<%@include file="/html/init.jsp"%>
 
 <portlet:renderURL var="viewURL">
 	<portlet:param name="mvcPath" value="/view.jsp"></portlet:param>
@@ -13,7 +9,9 @@
 <aui:form action="<%= addEntryURL %>" name="<portlet:namespace />">
 	<aui:fieldset>
 		<aui:input name="name"></aui:input>
+		<aui:input name="email"></aui:input>
 		<aui:input name="message"></aui:input>
+		<aui:input name="guestbookId" type="hidden" value='<%=ParamUtil.getString(renderRequest, "guestbookId") %>'></aui:input>
 		
 		<aui:button-row>
 			<aui:button type="submit"></aui:button>
