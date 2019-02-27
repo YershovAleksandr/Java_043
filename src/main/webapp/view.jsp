@@ -1,53 +1,58 @@
-<%--
-/**
- * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
- *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- *
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- */
---%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@include file="/html/init.jsp"%>
 
-<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
-<%@ taglib uri="http://alloy.liferay.com/tld/aui" prefix="aui" %>
-<%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
+<%
+	long guestbookId = Long.valueOf((Long) renderRequest.getAttribute("guestbookId"));
+%>
 
-<portlet:defineObjects />
+<aui:nav cssClass="nav-tabs">
+	<%
+		List<Guestbook> guestbooks = GuestbookLocalServiceUtil.getGuestbooks(scopeGroupId);
+	
+		for (int i = 0; i < guestbooks.size(); i++){
+			Guestbook curGuestbook = (Guestbook)guestbooks.get(i);
+			
+			String cssClass = StringPool.BLANK;
+			
+			if (curGuestbook.getGuestbookId() == guestbookId){
+				cssClass = "active";
+			}
+	%>
+	
+	<portlet:renderURL var="viewPageURL">
+		<portlet:param name="mvcPath" value="/view.jsp" />
+		<portlet:param name="guestbookId" value="<%=String.valueOf(curGuestbook.getGuestbookId())%>" />
+	</portlet:renderURL>
 
-<jsp:useBean id="entries" class="java.util.ArrayList" scope="request" />
+	<aui:nav-item cssClass="<%=cssClass%>" href="<%=viewPageURL%>" label="<%=HtmlUtil.escape(curGuestbook.getName())%>" />
 
+	<%
+		}
+	%>
+</aui:nav>
 
-<liferay-ui:search-container>
-	<liferay-ui:search-container-results
-		results="<%= entries %>"
-	/>
+<aui:button-row cssClass="guestbook-buttons">
+	<portlet:renderURL var="addGuestbookURL">
+		<portlet:param name="mvcPath" value="/guestbook/edit_guestbook.jsp" />
+	</portlet:renderURL>
+	
+	<portlet:renderURL var="addEntryURL">
+		<portlet:param name="mvcPath" value="/edit_entry.jsp" />
+		<portlet:param name="guestbookId" value="<%=String.valueOf(guestbookId) %>" />
+	</portlet:renderURL>
 
-	<liferay-ui:search-container-row
-		className="com.nam.model.Entry"
-		modelVar="entry"
-	>
+	<aui:button onClick="<%=addGuestbookURL.toString()%>" value="Add Guestbook" />
+	<aui:button onClick="<%=addEntryURL.toString()%>" value="Add Entry" />
+	
+</aui:button-row>
 
+<liferay-ui:search-container total="<%=EntryLocalServiceUtil.getEntriesCount(scopeGroupId, guestbookId) %>">
+	<liferay-ui:search-container-results results="<%=EntryLocalServiceUtil.getEntries(scopeGroupId,
+			guestbookId, searchContainer.getStart(), searchContainer.getEnd()) %>" />
+
+	<liferay-ui:search-container-row className="com.nam.srv.model.Entry" modelVar="entry">
 		<liferay-ui:search-container-column-text property="message" />
-
 		<liferay-ui:search-container-column-text property="name" />
-		
 	</liferay-ui:search-container-row>
 
 	<liferay-ui:search-iterator />
 </liferay-ui:search-container>
-
-<aui:button-row cssClass="guestbook-buttons">
-	<portlet:renderURL var="addEntryURL">
-		<portlet:param name="mvcPath" value="/edit_entry.jsp"></portlet:param>
-	</portlet:renderURL>
-
-	<aui:button onClick="<%= addEntryURL.toString() %>" value="Add Entry"></aui:button>
-
-</aui:button-row>
