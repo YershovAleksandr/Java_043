@@ -21,7 +21,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
-import com.nam.model.Entry;
+import com.nam.srv.model.Entry;
 import com.nam.srv.model.Guestbook;
 import com.nam.srv.service.EntryLocalServiceUtil;
 import com.nam.srv.service.GuestbookLocalServiceUtil;
@@ -37,16 +37,16 @@ public class Portlet extends MVCPortlet{
 		System.out.println("Hello World!! привет мир!!");
 	}
 	
-	public void doView(RenderRequest renderRequest, RenderResponse renderResponse) throws IOException, PortletException{
+	/*public void doView(RenderRequest renderRequest, RenderResponse renderResponse) throws IOException, PortletException{
 		System.out.println("->");
 		super.doView(renderRequest, renderResponse);
 		System.out.println("<-");
-	}
+	}*/
 	
 	public void addGuestbook(ActionRequest request, ActionResponse response) throws PortalException, SystemException{
 		System.out.println("Add guestbook!!!!");
 		
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(Portlet.class.getName(), request);
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(Guestbook.class.getName(), request);
 		
 		String name = ParamUtil.getString(request, "name");
 		
@@ -79,17 +79,17 @@ public class Portlet extends MVCPortlet{
 			
 			response.setRenderParameter("guestbookId", Long.toString(guestbookId));
 		}catch(Exception ex) {
-			SessionErrors.add(request, ex.getClass().getName);
+			SessionErrors.add(request, ex.getClass().getName());
 			
 			PortalUtil.copyRequestParameters(request, response);
-			response.setRenderParameter("mvcPath", "/guestbook/edit_entry.jsp");
+			response.setRenderParameter("mvcPath", "/edit_entry.jsp");
 		}
 	}
 	
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException{
 		try {
-			ServiceContext serviceContext = ServiceContextFactory.getInstance(Guestbook.class.getName(), renderRequest);
+			ServiceContext serviceContext = ServiceContextFactory.getInstance(Entry.class.getName(), renderRequest);
 			
 			long groupId = serviceContext.getScopeGroupId();
 			
